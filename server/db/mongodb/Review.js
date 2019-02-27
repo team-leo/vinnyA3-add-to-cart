@@ -2,13 +2,9 @@ const mongoose = require('mongoose');
 const db = require('./index.js');
 
 const reviewSchema = new mongoose.Schema({
-  /* TODO: Translate from SQL to MongoDB
-  ======================================
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  reviewCount NOT NULL,
-  stars INTEGER DEFAULT 0
-  */
-}, 
+  reviewCount: {type: Number, default: 0}
+  stars: {type: Number, default: 0}
+  }, 
   {
     timestamps: true
   }
