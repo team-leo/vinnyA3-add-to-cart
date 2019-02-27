@@ -25,6 +25,10 @@ An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).
 - Node - *v10.15.0* 
 - npm - *v6.4.1*
 
+A Google Maps API key is required. It must be stored in server/config/secrets.js.
+
+.gitignore exclude secrets.js from the repo. The file must be created locally.
+
 ## Development
 
 
