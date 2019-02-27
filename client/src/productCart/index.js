@@ -26,7 +26,6 @@ class Cart extends Component {
     axios
       .get(`${process.env.API_URL}/api/${id || 3}`)
       .then(({ data }) => {
-        console.log(data.rows);
         this.setState({
           product: data.rows,
           productReviews: data.rRows,
