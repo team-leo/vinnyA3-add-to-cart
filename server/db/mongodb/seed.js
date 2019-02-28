@@ -57,7 +57,7 @@ let makeReview = function () {
 }
 
 // console.log('start time:', Date());
-let t0 = now();
+let startTime = now();
 
 // console.log('start time:', Date.now());
 
@@ -67,6 +67,6 @@ for (let records = 0; records < 9; records++) {
 }
 
 // console.log('end time:', Date());
-let t1 = now();
-console.log(`${t0}ms to ${t1}ms`);
-console.log(`${t1 - t0}ms`);
+let endTime = now();
+// console.log(`${startTime}ms to ${endTime}ms`);
+console.log(`Database seeding took ${endTime - startTime}ms`);
