@@ -14,35 +14,47 @@ const {
 } = require('../utils/seedHelpers');
 const randStockNum = genRandomInt(1, 900);
 
-let pricingOptions = multiplePricing();
-let plan = protectionPlan();
-let deal = getLightningDeal();
+let pricingOptions;
+let plan;
+let deal;
 
-let newProduct = new Product({
-  productName: faker.commerce.productName(),
-  originalPrice: genDollarsCents(),
-  lightningDeal: deal[0],
-  salesPercent: deal[1],
-  pricingOptionOne: pricingOptions[0],
-  pricingOptionTwo: pricingOptions[1],
-  owningCompany: faker.company.companyName(),
-  fulfilledBy: faker.company.companyName(),
-  numInStock: randStockNum,
-  primeEligible: !!genRandomInt(0, 1),
-  returnable: !!genRandomInt(0, 1),
-  giftWrapAvaile: !!genRandomInt(0, 1),
-  buyUsed: !!genRandomInt(0, 1),
-  usedPrice: getUsedPrice(),
-  protectionPlan: plan[0],
-  protectionPlanPricingOptionOne: plan[1],
-  protectionPlanPricingOptionTwo: plan[2],
-  protectionPlanDescription: plan[2]
-});
+let makeProduct = function () {
+  pricingOptions = multiplePricing();
+  plan = protectionPlan();
+  deal = getLightningDeal();
 
-let newReview = new Review({
-  reviewCount: genRandomInt(0, 801),
-  stars: genRandomInt(0, 5)
-});
+  let newProduct = new Product({
+    productName: faker.commerce.productName(),
+    originalPrice: genDollarsCents(),
+    lightningDeal: deal[0],
+    salesPercent: deal[1],
+    pricingOptionOne: pricingOptions[0],
+    pricingOptionTwo: pricingOptions[1],
+    owningCompany: faker.company.companyName(),
+    fulfilledBy: faker.company.companyName(),
+    numInStock: randStockNum,
+    primeEligible: !!genRandomInt(0, 1),
+    returnable: !!genRandomInt(0, 1),
+    giftWrapAvaile: !!genRandomInt(0, 1),
+    buyUsed: !!genRandomInt(0, 1),
+    usedPrice: getUsedPrice(),
+    protectionPlan: plan[0],
+    protectionPlanPricingOptionOne: plan[1],
+    protectionPlanPricingOptionTwo: plan[2],
+    protectionPlanDescription: plan[2]
+  });  
+  newProduct.save();
+}
 
-newProduct.save();
-newReview.save();
+let makeReview = function () {
+  let newReview = new Review({
+    reviewCount: genRandomInt(0, 801),
+    stars: genRandomInt(0, 5)
+  });
+  newReview.save();
+}
+
+for (let records = 0; records < 9; records++) {
+  makeProduct();
+  makeReview();
+}
