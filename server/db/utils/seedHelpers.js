@@ -1,5 +1,5 @@
 const faker = require('faker');
-const genRandomInt = require('utils/genRandInt');
+// const genRandomInt = require('utils/genRandInt');
 
 const concatTwoValuesWith = delim => val1 => val2 => `${val1}${delim}${val2}`;
 
