@@ -14,14 +14,17 @@ const {
 } = require('../utils/seedHelpers');
 const randStockNum = genRandomInt(1, 900);
 
+let pricingOptions = multiplePricing();
+let plan = protectionPlan();
+let deal = getLightningDeal();
+
 let newProduct = new Product({
   productName: faker.commerce.productName(),
   originalPrice: genDollarsCents(),
-  lightningDeal: ...getLightningDeal(),
-  // TODO: REPLACE NEXT THREE LINES WITH RESULTS OF ...multiplePricing(),
-  salesPercent: Number,
-  pricingOptionOne: String,
-  pricingOptionTwo: String,
+  lightningDeal: deal[0],
+  salesPercent: deal[1],
+  pricingOptionOne: pricingOptions[0],
+  pricingOptionTwo: pricingOptions[1],
   owningCompany: faker.company.companyName(),
   fulfilledBy: faker.company.companyName(),
   numInStock: randStockNum,
@@ -29,12 +32,11 @@ let newProduct = new Product({
   returnable: !!genRandomInt(0, 1),
   giftWrapAvaile: !!genRandomInt(0, 1),
   buyUsed: !!genRandomInt(0, 1),
-  usedPrice: ...getUsedPrice(),
-  // TODO: REPLACE NEXT FOUR LINES WITH RESULTS OF ...protectionPlan(),
-  protectionPlan: {type: Boolean, default: false},
-  protectionPlanPricingOptionOne: String,
-  protectionPlanPricingOptionTwo: String,
-  protectionPlanDescription: String
+  usedPrice: getUsedPrice(),
+  protectionPlan: plan[0],
+  protectionPlanPricingOptionOne: plan[1],
+  protectionPlanPricingOptionTwo: plan[2],
+  protectionPlanDescription: plan[2]
 });
 
 let newReview = new Review({
@@ -42,4 +44,5 @@ let newReview = new Review({
   stars: genRandomInt(0, 5)
 });
 
+newProduct.save();
 newReview.save();
