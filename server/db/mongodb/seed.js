@@ -1,6 +1,8 @@
 const db = require('./index.js');
 const faker = require('faker');
 const path = require('path');
+const now = require('performance-now');
+
 const genRandomInt = require(path.join(__dirname, '../../../server/utils/genRandInt'));
 const { Product } = require('../../../server/db/mongodb/Product.js');
 const { Review } = require('../../../server/db/mongodb/Review.js');
@@ -54,7 +56,17 @@ let makeReview = function () {
   newReview.save();
 }
 
+// console.log('start time:', Date());
+let t0 = now();
+
+// console.log('start time:', Date.now());
+
 for (let records = 0; records < 9; records++) {
   makeProduct();
   makeReview();
 }
+
+// console.log('end time:', Date());
+let t1 = now();
+console.log(`${t0}ms to ${t1}ms`);
+console.log(`${t1 - t0}ms`);
