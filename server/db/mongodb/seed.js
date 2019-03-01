@@ -45,7 +45,7 @@ let makeProduct = function () {
     protectionPlanPricingOptionTwo: plan[2],
     protectionPlanDescription: plan[2]
   });  
-  newProduct.save();
+  // newProduct.save();
 }
 
 let makeReview = function () {
@@ -53,20 +53,26 @@ let makeReview = function () {
     reviewCount: genRandomInt(0, 801),
     stars: genRandomInt(0, 5)
   });
-  newReview.save();
+  return newReview;
+  // newReview.save();
 }
 
-// console.log('start time:', Date());
+let documents = [];
+
+// track starting time for seeding
 let startTime = now();
 
-// console.log('start time:', Date.now());
-
-for (let records = 0; records < 9; records++) {
-  makeProduct();
-  makeReview();
+// test if numerous records can be pushed into an array without memory failure
+// test succeeded for 500,000 and 1 million
+for (let records = 0; records < 1000000; records++) {
+//   makeProduct();
+//   makeReview();
+documents.push(makeProduct());
 }
+console.log(documents.length);
 
-// console.log('end time:', Date());
+
+// track ending time for seeding
 let endTime = now();
 // console.log(`${startTime}ms to ${endTime}ms`);
 console.log(`Database seeding took ${endTime - startTime}ms`);
