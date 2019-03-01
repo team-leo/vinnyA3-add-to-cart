@@ -16,63 +16,82 @@ const {
 } = require('../utils/seedHelpers');
 const randStockNum = genRandomInt(1, 900);
 
-let pricingOptions;
-let plan;
-let deal;
+let pricingOptions = multiplePricing();
+let plan = protectionPlan();
+let deal = getLightningDeal();
+let productName = faker.commerce.productName();
+let originalPrice = genDollarsCents();
+let companyName = faker.company.companyName();
+
 
 let makeProduct = function () {
-  pricingOptions = multiplePricing();
-  plan = protectionPlan();
-  deal = getLightningDeal();
-
   let newProduct = new Product({
-    productName: faker.commerce.productName(),
-    originalPrice: genDollarsCents(),
+    productName: productName,
+    originalPrice: originalPrice,
     lightningDeal: deal[0],
     salesPercent: deal[1],
     pricingOptionOne: pricingOptions[0],
     pricingOptionTwo: pricingOptions[1],
-    owningCompany: faker.company.companyName(),
-    fulfilledBy: faker.company.companyName(),
+    owningCompany: companyName,
+    fulfilledBy: companyName,
     numInStock: randStockNum,
-    primeEligible: !!genRandomInt(0, 1),
-    returnable: !!genRandomInt(0, 1),
-    giftWrapAvaile: !!genRandomInt(0, 1),
-    buyUsed: !!genRandomInt(0, 1),
-    usedPrice: getUsedPrice(),
+    primeEligible: true,
+    returnable: true,
+    giftWrapAvaile: true,
+    buyUsed: true,
+    usedPrice: originalPrice,
     protectionPlan: plan[0],
     protectionPlanPricingOptionOne: plan[1],
     protectionPlanPricingOptionTwo: plan[2],
     protectionPlanDescription: plan[2]
   });  
-  // newProduct.save();
+  return newProduct;
 }
 
 let makeReview = function () {
   let newReview = new Review({
-    reviewCount: genRandomInt(0, 801),
-    stars: genRandomInt(0, 5)
+    // reviewCount: genRandomInt(0, 50),
+    reviewCount: 10,
+    stars: 0
+    // stars: genRandomInt(0, 5)
   });
   return newReview;
   // newReview.save();
 }
 
-let documents = [];
+db.then(()=> {
+  console.log('Connected To DB');
 
-// track starting time for seeding
-let startTime = now();
+  let documents = [];
 
-// test if numerous records can be pushed into an array without memory failure
-// test succeeded for 500,000 and 1 million
-for (let records = 0; records < 1000000; records++) {
-//   makeProduct();
-//   makeReview();
-documents.push(makeProduct());
-}
-console.log(documents.length);
+  // track starting time for seeding
+  let startTime = now();
+
+  for (let records = 0; records < 1000000; records++) {
+    documents.push(makeReview());  
+  }
+
+  Review.insertMany(documents, {ordered: false}, (error, docs) => {
+      // track ending time for seeding
+    let endTime = now();
+    // console.log(process.memoryUsage());
+
+    // console.log(`${startTime}ms to ${endTime}ms`);
+    console.log(`Database seeding took ${endTime - startTime}ms`);
+
+    if (error) {
+      return error;
+    } else {
+      console.log(`${docs.length} documents saved to database`);
+      // return docs;
+    }
+  });
+
+  
+}).catch((err) => {
+  console.log(err);
+});
 
 
-// track ending time for seeding
-let endTime = now();
-// console.log(`${startTime}ms to ${endTime}ms`);
-console.log(`Database seeding took ${endTime - startTime}ms`);
+
+

@@ -17,7 +17,8 @@
     "clean:dist": "rimraf ./dist",
     "dev": "npm-run-all --parallel client:dev server:dev",
     "build": "npm run clean:dist && webpack --env.API_URL='http://ec2-52-87-193-146.compute-1.amazonaws.com' -d",
-    "seed": "node ./server/db/mongodb/seed.js"
+    "seed": "node --max-old-space-size=8192 ./server/db/mongodb/seed.js",
+    "mongodb": "mongod --nojournal &amp;"
   },
   "jest": {
     "verbose": true,
