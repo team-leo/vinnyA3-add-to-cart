@@ -9,7 +9,13 @@ if (cluster.isMaster) {
   // Create a worker for each CPU
   for (var i = 0; i < cpuCount; i += 1) {
       cluster.fork();
-  }  
+  }
+  // If worker dies, replace with new worker
+  cluster.on('exit', function (worker) {
+    console.log('Worker %d has died', worker.id);
+    cluster.fork();
+  });
+
 } else {
   let makeReview = function () {
     let newReview = {
@@ -30,7 +36,7 @@ if (cluster.isMaster) {
     // track starting time for seeding
     let startTime01 = now();
 
-    for (let records = 0; records < 1000000; records++) {
+    for (let records = 0; records < 2500000; records++) {
       documents.push(makeReview());  
     }
 
