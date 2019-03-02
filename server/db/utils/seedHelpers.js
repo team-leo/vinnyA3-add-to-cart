@@ -1,5 +1,7 @@
 const faker = require('faker');
-const genRandomInt = require('utils/genRandInt');
+const path = require('path');
+// const genRandomInt = require('server/utils/genRandInt');
+const genRandomInt = require(path.join(__dirname, '../../../server/utils/genRandInt'));
 
 const concatTwoValuesWith = delim => val1 => val2 => `${val1}${delim}${val2}`;
 
