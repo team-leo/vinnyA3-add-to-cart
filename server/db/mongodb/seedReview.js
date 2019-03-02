@@ -21,9 +21,7 @@ if (cluster.isMaster) {
   let makeReview = function () {
     let newReview = {
       reviewCount: genRandomInt(0, 801),
-      // reviewCount: 0,
       stars: genRandomInt(0, 5)
-      // stars: 0
     }
     return newReview;
   }

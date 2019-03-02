@@ -37,16 +37,6 @@ if (cluster.isMaster) {
   });
 
 } else {
-//   let makeReview = function () {
-//     let newReview = {
-//       reviewCount: genRandomInt(0, 801),
-//       // reviewCount: 0,
-//       stars: genRandomInt(0, 5)
-//       // stars: 0
-//     }
-//     return newReview;
-//   }
-
   let makeProduct = function () {
     let newProduct = {
         productName: productName,
@@ -58,15 +48,15 @@ if (cluster.isMaster) {
         owningCompany: companyName,
         fulfilledBy: companyName,
         numInStock: randStockNum,
-        // primeEligible: true,
-        // returnable: true,
-        // giftWrapAvaile: true,
-        // buyUsed: true,
+        // primeEligible: !!genRandomInt(0, 1),
+        // returnable: !!genRandomInt(0, 1),
+        // giftWrapAvaile: !!genRandomInt(0, 1),
+        // buyUsed: !!genRandomInt(0, 1),
         usedPrice: originalPrice,
         // protectionPlan: plan[0],
         protectionPlanPricingOptionOne: plan[1],
         protectionPlanPricingOptionTwo: plan[2],
-        protectionPlanDescription: plan[2]
+        protectionPlanDescription: plan[3]
     };
   return newProduct;
 }
