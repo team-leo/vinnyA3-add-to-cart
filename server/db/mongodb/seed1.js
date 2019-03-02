@@ -1,6 +1,7 @@
 const cluster = require('cluster');
 const path = require('path');
 const now = require('performance-now');
+const genRandomInt = require(path.join(__dirname, '../../../server/utils/genRandInt'));
 
 if (cluster.isMaster) {
   // Count the machine's CPUs
@@ -19,8 +20,10 @@ if (cluster.isMaster) {
 } else {
   let makeReview = function () {
     let newReview = {
-      reviewCount: 0,
-      stars: 0
+      reviewCount: genRandomInt(0, 801),
+      // reviewCount: 0,
+      stars: genRandomInt(0, 5)
+      // stars: 0
     }
     return newReview;
   }
