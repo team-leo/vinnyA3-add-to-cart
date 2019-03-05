@@ -20,6 +20,7 @@
     "seed": "node ./server/db/mongodb/seedProduct.js",
     "seed-review": "node ./server/db/mongodb/seedReview.js",
     "seed-pg": "node ./server/db/postgres/seedReview.js",
+    "seed-pg-product": "node --max-old-space-size=4096 ./server/db/postgres/seedProduct.js",
     "mongodb": "mongod --nojournal &amp;"
   },
   "jest": {

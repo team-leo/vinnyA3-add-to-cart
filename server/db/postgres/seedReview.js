@@ -23,6 +23,11 @@ if (cluster.isMaster) {
 
 } else {
   let db = pgp(config);
+
+//   db.query('CREATE TABLE reviews(id SERIAL PRIMARY KEY, reviewCount INTEGER, stars INTEGER DEFAULT 0)', (err, res) => {
+//     console.log(err ? err.stack : res);
+//     console.log(`${now()}ms`);
+//   });
   
   let cs = new pgp.helpers.ColumnSet([
     {name: 'reviewcount', def: 0},
@@ -32,7 +37,7 @@ if (cluster.isMaster) {
   let startTime = now();
   let data = [];
   
-  for (let index = 0; index < 2500000; index++) {
+  for (let index = 0; index < 10; index++) {
     data.push({reviewcount: genRandomInt(0, 801), stars: genRandomInt(0, 5)});
   }
   
