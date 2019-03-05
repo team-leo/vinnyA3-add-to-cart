@@ -86,7 +86,7 @@ if (cluster.isMaster) {
   let startTime = now();
   let data = [];
   
-  for (let index = 0; index < 2500000; index++) {
+  for (let index = 0; index < 1250000; index++) {
     data.push(
         {productname: productName, 
         originalprice: originalPrice,
@@ -106,11 +106,11 @@ if (cluster.isMaster) {
 
   db.task('inserting-products', t => {
     const insert = pgp.helpers.insert(data, cs);
-    return t.none(insert);
+    return t.batch([t.none(insert), t.none(insert)]);
   })
   .then(() => {
     console.log(`Success: Database seeding took ${now() - startTime}ms`);
-    console.log(`${data.length} records generated`);
+    console.log(`${data.length * 2} records generated`);
   })
   .catch(error => {
     console.log(error);
