@@ -5,6 +5,7 @@ const db = require('../../db/mongodb');
 const { API_KEY } = require('config/secret');
 const { Product } = require('../../db/mongodb/Product');
 const { Review } = require('../../db/mongodb/Review');
+const { ObjectID } = require('mongodb');
 
 
 module.exports = {
@@ -41,44 +42,41 @@ module.exports = {
       });
     }
 
-// db.products.find({
-//     "id": 5
-// });
 
-    // db.serialize(() => {
-      Product.find({ id: id}, (err, rows) => {
-        if (err) {
-          return res.send({
-            message: 'Oops, something went wrong!!',
-            status: 500,
-          });
+    Product.find({ _id: ObjectID(id)}, (err, rows) => {
+      if (err) {
+        return res.send({
+          message: 'Oops, something went wrong!!',
+          status: 500,
+        });
+      }
+
+      if (!!rows.protectionPlan) {
+        // Review.find( {id: genRandomInt(0, 70)},
+        Review.find({_id: ObjectID('5c7f1872fef7b21a3c7423f2')}, (err, rRows) => {
+          if (err) {
+            return res.send({
+              message: 'Oops, something went wrong!!',
+              status: 500,
+            });
+          }
+
+          // return res.send({
+          //   rows,
+          //   rRows,
+          //   status: 200,
+          // });
         }
+      );
+        
+      } else {          
+        return res.send({
+          rows,
+          // rRows,
+          status: 200,
+        });
+      }
+    });
 
-        if (!!rows.protectionPlan) {
-          Review.find( {id: genRandomInt(0, 70)},
-            // genRandomInt(0, 70),
-            (err, rRows) => {
-              if (err) {
-                return res.send({
-                  message: 'Oops, something went wrong!!',
-                  status: 500,
-                });
-              }
-
-              return res.send({
-                rows,
-                rRows,
-                status: 200,
-              });
-            }
-          );
-        } else {          
-          return res.send({
-            rows,
-            status: 200,
-          });
-        }
-      });
-    // });
   },
 };

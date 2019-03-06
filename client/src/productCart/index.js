@@ -27,7 +27,7 @@ class Cart extends Component {
       .get(`${process.env.API_URL}/api/${id || 3}`)
       .then(({ data }) => {
         this.setState({
-          product: data.rows,
+          product: data.rows[0],
           productReviews: data.rRows,
         });
       });
