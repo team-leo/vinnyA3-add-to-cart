@@ -28,7 +28,7 @@ class Cart extends Component {
       .then(({ data }) => {
         this.setState({
           product: data.rows[0],
-          productReviews: data.rRows,
+          productReviews: data.rRows[0]
         });
       });
   }

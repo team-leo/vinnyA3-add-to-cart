@@ -32,7 +32,7 @@ module.exports = {
         );
     }
   },
-  
+
   getProductInfo: (req, res) => {
     const { id } = req.params;
 
@@ -45,6 +45,7 @@ module.exports = {
 
     Product.find({_id: ObjectID(id)})
       .then((rows) => {
+        // TODO: Replace hardcoded ID with URL parameter 
         Review.find({_id: ObjectID('5c7f1872fef7b21a3c7423f2')})
           .then((rRows) => {
             res.send({
