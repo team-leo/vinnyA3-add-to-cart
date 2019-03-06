@@ -1,7 +1,11 @@
 const axios = require('axios');
 const genRandomInt = require('utils/genRandInt');
-const db = require('db/connection');
+// const db = require('db/connection');
+const db = require('../../db/mongodb');
 const { API_KEY } = require('config/secret');
+const { Product } = require('../../db/mongodb/Product');
+const { Review } = require('../../db/mongodb/Review');
+
 
 module.exports = {
   getGeolocation: (req, res) => {
@@ -37,8 +41,12 @@ module.exports = {
       });
     }
 
-    db.serialize(() => {
-      db.get('SELECT * FROM products WHERE id = (?)', id, (err, rows) => {
+// db.products.find({
+//     "id": 5
+// });
+
+    // db.serialize(() => {
+      Product.find({ id: id}, (err, rows) => {
         if (err) {
           return res.send({
             message: 'Oops, something went wrong!!',
@@ -47,9 +55,8 @@ module.exports = {
         }
 
         if (!!rows.protectionPlan) {
-          db.get(
-            'SELECT * FROM productReviews WHERE id = ?',
-            genRandomInt(0, 70),
+          Review.find( {id: genRandomInt(0, 70)},
+            // genRandomInt(0, 70),
             (err, rRows) => {
               if (err) {
                 return res.send({
@@ -65,13 +72,13 @@ module.exports = {
               });
             }
           );
-        } else {
+        } else {          
           return res.send({
             rows,
             status: 200,
           });
         }
       });
-    });
+    // });
   },
 };
