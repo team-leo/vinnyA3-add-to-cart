@@ -1,7 +1,12 @@
 const axios = require('axios');
 const genRandomInt = require('utils/genRandInt');
-const db = require('db/connection');
+// const db = require('db/connection');
+const db = require('../../db/mongodb');
 const { API_KEY } = require('config/secret');
+const { Product } = require('../../db/mongodb/Product');
+const { Review } = require('../../db/mongodb/Review');
+const { ObjectID } = require('mongodb');
+
 
 module.exports = {
   getGeolocation: (req, res) => {
@@ -27,6 +32,7 @@ module.exports = {
         );
     }
   },
+
   getProductInfo: (req, res) => {
     const { id } = req.params;
 
@@ -37,41 +43,23 @@ module.exports = {
       });
     }
 
-    db.serialize(() => {
-      db.get('SELECT * FROM products WHERE id = (?)', id, (err, rows) => {
-        if (err) {
-          return res.send({
-            message: 'Oops, something went wrong!!',
-            status: 500,
+    Product.find({_id: ObjectID(id)})
+      .then((rows) => {
+        // TODO: Replace hardcoded ID with URL parameter 
+        Review.find({_id: ObjectID('5c7f1872fef7b21a3c7423f2')})
+          .then((rRows) => {
+            res.send({
+              rows,
+              rRows,
+              status: 200
+            });
+          })
+          .catch((err) => {
+            return res.send({
+              message: 'Oops, something went wrong!!',
+              status: 500
+            });
           });
-        }
-
-        if (!!rows.protectionPlan) {
-          db.get(
-            'SELECT * FROM productReviews WHERE id = ?',
-            genRandomInt(0, 70),
-            (err, rRows) => {
-              if (err) {
-                return res.send({
-                  message: 'Oops, something went wrong!!',
-                  status: 500,
-                });
-              }
-
-              return res.send({
-                rows,
-                rRows,
-                status: 200,
-              });
-            }
-          );
-        } else {
-          return res.send({
-            rows,
-            status: 200,
-          });
-        }
       });
-    });
-  },
+    }
 };
