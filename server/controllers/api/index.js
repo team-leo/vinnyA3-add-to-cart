@@ -43,11 +43,11 @@ module.exports = {
       });
     }
 
-    Product.find({_id: ObjectID(id)})
+    Product.findOne({_id: ObjectID(id)})
       .then((rows) => {
-        // TODO: Replace hardcoded ID with URL parameter 
-        Review.find({_id: ObjectID('5c7f1872fef7b21a3c7423f2')})
-          .then((rRows) => {
+        // Retrieve first review from DB
+        Review.findOne({})
+          .then((rRows) => {            
             res.send({
               rows,
               rRows,

@@ -17,9 +17,7 @@ const randStockNum = genRandomInt(1, 900);
 let pricingOptions = multiplePricing();
 let plan = protectionPlan();
 let deal = getLightningDeal();
-// let productName = faker.commerce.productName();
 let originalPrice = genDollarsCents();
-// let companyName = faker.company.companyName();
 
 
 if (cluster.isMaster) {
@@ -39,16 +37,13 @@ if (cluster.isMaster) {
 } else {
   let makeProduct = function () {
     let newProduct = {
-        // productName: productName,
         productName: faker.commerce.productName(),
         originalPrice: originalPrice,
         // lightningDeal: deal[0],
         salesPercent: deal[1],
         pricingOptionOne: pricingOptions[0],
         pricingOptionTwo: pricingOptions[1],
-        // owningCompany: companyName,
         owningCompany: faker.company.companyName(),
-        // fulfilledBy: companyName,
         fulfilledBy: faker.company.companyName(),
         numInStock: randStockNum,
         // primeEligible: !!genRandomInt(0, 1),

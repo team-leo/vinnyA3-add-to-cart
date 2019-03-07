@@ -16,7 +16,7 @@ const productSchema = new mongoose.Schema({
   giftWrapAvaile: {type: Boolean, default: true},
   buyUsed: {type: Boolean, default: false},
   usedPrice: String,
-  protectionPlan: {type: Boolean, default: false},
+  protectionPlan: {type: Boolean, default: true},
   protectionPlanPricingOptionOne: String,
   protectionPlanPricingOptionTwo: String,
   protectionPlanDescription: String
