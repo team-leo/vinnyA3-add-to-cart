@@ -22,7 +22,8 @@
     "seed-pg": "node ./server/db/postgres/seedReview.js",
     "seed-pg-product": "node --max-old-space-size=8192 ./server/db/postgres/seedProduct.js",
     "reset-db": "node ./server/db/postgres/makeDatabase.js",
-    "mongodb": "mongod --nojournal &amp;"
+    "mongodb": "mongod --nojournal &amp;",
+    "start": "NODE_PATH=./server node server/index.js"
   },
   "jest": {
     "verbose": true,
