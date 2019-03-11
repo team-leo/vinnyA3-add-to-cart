@@ -1,0 +1,19 @@
+config:
+  target: http://localhost:3000
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      name: "1 user per second"
+    - duration: 60
+      arrivalRate: 10
+      name: "10 users per second"
+    - duration: 60
+      arrivalRate: 100
+      name: "100 users per second"
+    - duration: 60
+      arrivalRate: 1000      
+      name: "1,000 users per second"
+scenarios:
+  - flow:
+    - get:
+        url: "/api/5c7f1bef54d6561a63397768"
