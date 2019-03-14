@@ -16,5 +16,9 @@ app.use('/api', require('./routes/api'));
 app.get('/bundle', (req, res) =>
   res.sendFile(path.resolve(__dirname, '../dist/bundle.js'))
 );
+// Verify domain ownership for Loader.io
+app.get('/loaderio-8f9df7f5497dc81278a8b93c8fb4f3ea', (req, res) => 
+  res.sendFile(path.resolve(__dirname, '../dist/loaderio-8f9df7f5497dc81278a8b93c8fb4f3ea.txt'))
+);
 
 app.listen(PORT, () => (console.log(`Listening on port ${PORT}`), void 0));
