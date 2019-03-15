@@ -16,24 +16,36 @@ if (cluster.isMaster) {
     cluster.fork();
   });
 
-} else {
-    // TODO: Auto-increment MongoDB IDs here
-    MongoClient.connect('mongodb://localhost:27017/amazon-cart', (err, db) => {
+  MongoClient.connect('mongodb://localhost:27017/amazon-cart', { useNewUrlParser: true }, (err, db) => {
         if (err) throw err;
         console.log('Connected To DB');
         const dbo = db.db('amazon-cart');
 
         /* create counters collection */ 
-        db.counters.insert (
-            {
-                _id: "reviews",
-                seq: NumberInt(0)
-            }
-        );
+        dbo.createCollection('counters', (err, res) => {
+            if (err) throw err;
+            console.log(`'counters' collection created`);
+
+            dbo.collection('counters').insertOne(
+                {
+                    _id: "reviews",
+                    seq: 0
+                }
+            );            
+        });
+        // db.close();
+  });
+
+} else {
+    // TODO: Auto-increment MongoDB IDs here
+    MongoClient.connect('mongodb://localhost:27017/amazon-cart', { useNewUrlParser: true }, (err, db) => {
+        if (err) throw err;
+        console.log('Connected To DB');
+        const dbo = db.db('amazon-cart');
 
         /* increment counter by 1 */ 
         function getNextSequence(name) {
-        var ret = db.counters.findAndModify(
+        var ret = dbo.counters.findAndModify(
             {
                 query: { _id: name },
                 update: { $inc: { seq: 1 } },
@@ -45,12 +57,15 @@ if (cluster.isMaster) {
 
         /* add incremental counters to reviews */ 
         // TODO: Find and update only records without id field
-        db.reviews.find({}).forEach(function(doc){  
-            db.reviews.update({_id:  doc._id}, {$set: {
-                id: getNextSequence("reviews")
-            }});    
-        });
+        // Limit search to range of numbers (ex. 1-10,000)
+        // dbo.reviews.find({}).forEach(function(doc){  
+        //     dbo.reviews.update({_id:  doc._id}, {$set: {
+        //         id: getNextSequence("reviews")
+        //     }});    
+        // });
 
+        console.log('moo');
+        
     });
 }
 
