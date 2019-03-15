@@ -37,43 +37,56 @@ if (cluster.isMaster) {
   });
 
 } else {
-    MongoClient.connect('mongodb://localhost:27017/amazon-cart', { useNewUrlParser: true }, (err, db) => {
+    MongoClient.connect('mongodb://localhost:27017/amazon-cart', { useNewUrlParser: true }, async (err, db) => {
         if (err) throw err;
         console.log('Connected To DB');
         const dbo = db.db('amazon-cart');
 
         /* increment counter by 1 */ 
-        function getNextSequence(name, callback) {
-            let ret = dbo.collection('counters').findOneAndUpdate(
-                {_id: name}, {$inc: {seq: 1}}, function (err, res) {
-                    if (err) callback(err, null);
-                    // console.log(res.value.seq);
-                    callback(null, res.value.seq);
-                }
-            );
+        async function getNextSequence(name) {
+            let count = 100;
+            await dbo.collection('counters').findOneAndUpdate(
+                {_id: name},
+                {$inc: {seq: 1}}
+            ).then(res => {
+                // console.log('val return from db', res.value.seq);
+                count = res.value.seq;
+                // console.log('count', count);
+            }).catch(err => {
+                console.log(err);
+            });
+            // console.log('count', count);
+            return count;
         }
 
         /* add incremental counters to reviews */ 
-        // Find records without id field
         // Limit search to range of numbers (ex. 1-10,000)
-        dbo.collection('reviews').find({id: {$not: {$gte: 1}}}).limit(15).forEach(function(doc){  
-            let currentId = getNextSequence("reviews", (err, res) => {
-                       if (err) throw err;
-                       console.log(res);
-                       return res;
-                   });
-                   console.log('currentId', currentId);
-                   
+        dbo.collection('reviews')
+           .find({id: {$not: {$gte: 0}}})
+           .limit(5)
+           .forEach(await function(doc){
+                let currentId = getNextSequence("reviews").then((res) => {
+                    // console.log('res from async', res); 
+                    currentId = res;
+                    // console.log('mycurrentid', currentId);
+                    // return res;
+                    dbo.collection('reviews')
+                    .updateOne(
+                        {_id: doc._id},
+                        {$set: {id: currentId}}
+                        );
+                    console.log('currentId', currentId);
+                    
+                });
             
-            dbo.collection('reviews')
-               .updateOne({
-                   _id: doc._id},
-                   {$set: {id: 5}},
-                   function (err, res) {
-                       if (err) throw err;
-                       console.log('OK');
-                   })
-            // console.log(doc);
+            // console.log('currentId', currentId);
+            
+            // dbo.collection('reviews')
+            //    .updateOne(
+            //        {_id: doc._id},
+            //        {$set: {id: currentId}}
+            //     );
+            // console.log('doc', doc);
         });
     });
 }
