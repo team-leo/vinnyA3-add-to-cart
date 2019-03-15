@@ -43,31 +43,37 @@ if (cluster.isMaster) {
         const dbo = db.db('amazon-cart');
 
         /* increment counter by 1 */ 
-        function getNextSequence(name) {
-        let ret = dbo.collection('counters').findAndModify(
-            {
-                query: { _id: name },
-                update: { $inc: { seq: 1 } },
-                new: true
-            }
-        );
-        return ret.seq;
+        function getNextSequence(name, callback) {
+            let ret = dbo.collection('counters').findOneAndUpdate(
+                {_id: name}, {$inc: {seq: 1}}, function (err, res) {
+                    if (err) callback(err, null);
+                    // console.log(res.value.seq);
+                    callback(null, res.value.seq);
+                }
+            );
         }
 
         /* add incremental counters to reviews */ 
-        // TODO: Find and update only records without id field
+        // Find records without id field
         // Limit search to range of numbers (ex. 1-10,000)
-
-        // find records where value of stars is not greater than 0
-        // limit results to 3 records
-        // dbo.collection('reviews').find({stars: {$not: {$gt: 0}}}).limit(3).forEach(function(doc){  
-
-        dbo.collection('reviews').find({id: {$not: {$gt: 0}}}).limit(3).forEach(function(doc){  
-            // dbo.reviews.update({_id:  doc._id}, {$set: {
-            //     id: getNextSequence("reviews")
-            // }});    
-            console.log(doc);
+        dbo.collection('reviews').find({id: {$not: {$gte: 1}}}).limit(15).forEach(function(doc){  
+            let currentId = getNextSequence("reviews", (err, res) => {
+                       if (err) throw err;
+                       console.log(res);
+                       return res;
+                   });
+                   console.log('currentId', currentId);
+                   
             
+            dbo.collection('reviews')
+               .updateOne({
+                   _id: doc._id},
+                   {$set: {id: 5}},
+                   function (err, res) {
+                       if (err) throw err;
+                       console.log('OK');
+                   })
+            // console.log(doc);
         });
     });
 }
