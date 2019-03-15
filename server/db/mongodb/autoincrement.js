@@ -32,12 +32,11 @@ if (cluster.isMaster) {
                     seq: 0
                 }
             );            
+            db.close();
         });
-        // db.close();
   });
 
 } else {
-    // TODO: Auto-increment MongoDB IDs here
     MongoClient.connect('mongodb://localhost:27017/amazon-cart', { useNewUrlParser: true }, (err, db) => {
         if (err) throw err;
         console.log('Connected To DB');
@@ -45,7 +44,7 @@ if (cluster.isMaster) {
 
         /* increment counter by 1 */ 
         function getNextSequence(name) {
-        var ret = dbo.counters.findAndModify(
+        let ret = dbo.collection('counters').findAndModify(
             {
                 query: { _id: name },
                 update: { $inc: { seq: 1 } },
@@ -58,14 +57,18 @@ if (cluster.isMaster) {
         /* add incremental counters to reviews */ 
         // TODO: Find and update only records without id field
         // Limit search to range of numbers (ex. 1-10,000)
-        // dbo.reviews.find({}).forEach(function(doc){  
-        //     dbo.reviews.update({_id:  doc._id}, {$set: {
-        //         id: getNextSequence("reviews")
-        //     }});    
-        // });
 
-        console.log('moo');
-        
+        // find records where value of stars is not greater than 0
+        // limit results to 3 records
+        // dbo.collection('reviews').find({stars: {$not: {$gt: 0}}}).limit(3).forEach(function(doc){  
+
+        dbo.collection('reviews').find({id: {$not: {$gt: 0}}}).limit(3).forEach(function(doc){  
+            // dbo.reviews.update({_id:  doc._id}, {$set: {
+            //     id: getNextSequence("reviews")
+            // }});    
+            console.log(doc);
+            
+        });
     });
 }
 
