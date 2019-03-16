@@ -1,3 +1,4 @@
+const compression = require('compression');
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
@@ -6,10 +7,17 @@ const app = express();
 const cors = require('cors');
 
 // MIDDLEWARE
+app.use(compression());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+
+app.get('*.js', function (req, res, next) {
+  req.url = req.url + '.gz';
+  res.set('Content-Encoding', 'gzip');
+  next();
+});
 
 // ROUTES
 app.use('/api', require('./routes/api'));

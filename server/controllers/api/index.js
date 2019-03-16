@@ -43,10 +43,16 @@ module.exports = {
       });
     }
 
+    // console.log('id', id);
     Product.findOne({_id: ObjectID(id)})
+    
+    // Product.findOne({'id': id})
       .then((rows) => {
+        // console.log('rows', rows);
+        
         // Retrieve first review from DB
         Review.findOne({})
+        // Review.findOne({'id': id})
           .then((rRows) => {            
             res.send({
               rows,

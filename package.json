@@ -45,6 +45,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "cluster": "^0.7.7",
+    "compression": "^1.7.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "memory-cache": "^0.2.0",
